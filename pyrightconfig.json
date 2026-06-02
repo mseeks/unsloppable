@@ -1,0 +1,8 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": ["."],
+  "include": ["unsloppable", "eval", "tests"],
+  "exclude": ["corpus", "eval/report", "**/__pycache__", ".venv"],
+  "reportMissingImports": "warning"
+}

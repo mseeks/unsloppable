@@ -1,0 +1,39 @@
+[project]
+name = "unsloppable"
+version = "0.1.0"
+description = "A layered, agent-callable linter that flags prose reading as AI-written — stylometric tells + likelihood signals, with per-signal revision advice."
+readme = "README.md"
+license = { file = "LICENSE" }
+# Agent SDK / torch are tested on 3.10–3.13; the local Homebrew 3.14 has a broken
+# pyexpat, so we pin to a uv-managed 3.13 (see .python-version).
+requires-python = ">=3.10,<3.14"
+# The Layer-1 linter + CLI are pure stdlib — `pip install unsloppable` is zero-dep.
+dependencies = []
+
+[project.optional-dependencies]
+# Layer 2 (perplexity / Binoculars) + the learned combiner.
+ml = [
+    "torch",
+    "transformers",
+    "scikit-learn",
+    "numpy",
+]
+# Fresh-corpus generation via the Claude Agent SDK (eval/generate.py).
+gen = [
+    "claude-agent-sdk",
+]
+test = [
+    "pytest",
+]
+
+[project.scripts]
+unsloppable = "unsloppable.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# Ship the package (incl. the trained combiner.json); the eval harness/tests stay
+# in the repo but out of the wheel.
+packages = ["unsloppable"]

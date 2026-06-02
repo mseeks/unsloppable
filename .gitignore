@@ -1,0 +1,19 @@
+# Generated / downloaded artifacts — reproducible, not source.
+# (Comments must be on their own line; git treats an inline '#' as literal.)
+
+# built by eval/fetch_hc3.py (deterministic, seeded) and eval/generate.py
+corpus/
+# written by eval/evaluate.py, compare_sources.py, analyze.py
+eval/report/
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# build artifacts
+dist/
+build/
+*.egg-info/
+.pytest_cache/
