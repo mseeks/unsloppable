@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (install · tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      # --all-extras --frozen installs the committed (bumped) lock across every
+      # extra (ml/gen/test): the install itself is the real oracle for an ml/gen
+      # dependency-patch PR, not just a re-resolve.
+      - run: uv sync --all-extras --frozen
+      # The two ml-path tests load a transformers model (network download); skip
+      # them so CI stays hermetic. The rest are pure-stdlib core unit tests.
+      - run: uv run pytest -k "not ml_path and not likelihood_scorer"
